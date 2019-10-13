@@ -3,7 +3,6 @@
 echo "Enter filename to backup: "
 read filename
 
-
 ls .backup_test > /dev/null || mkdir .backup_test
 
 sha256sum $filename > ./.backup_test/${filename}_hash
@@ -25,6 +24,15 @@ function check {
         cp $filename ./.backup_test
         sha256sum $filename > ./.backup_test/${filename}_hash
       fi
+    fi
+  elif [[ ! -e ${filename} ]]; then
+	  echo "File is deleted!!! Do you want to restore it? (y - yes/n - no (backup will be deleted!!!))"
+    read answerD
+    if [[ $answerD == 'y' ]]; then
+      cp ./.backup_test/${filename} .
+    elif [[ $answerD != 'y' ]]; then
+      rm ./.backup_test/${filename}
+      rm ./.backup_test/${filename}_hash
     fi
   fi
 }
